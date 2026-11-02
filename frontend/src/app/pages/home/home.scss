@@ -9,8 +9,8 @@
 .hero__slide {
   display: flex;
   align-items: center;
-  min-height: 16rem;
-  padding: var(--space-8) var(--space-6);
+  min-height: 14rem;
+  padding: var(--space-8) 3.5rem;
   background: linear-gradient(120deg, hsl(var(--hue) 55% 30%), hsl(var(--hue) 65% 55%));
   color: #fff;
 
@@ -46,7 +46,7 @@
   top: 0;
   bottom: 0;
   z-index: 2;
-  width: 3.5rem;
+  width: 3rem;
   border: 0;
   background: transparent;
   color: #fff;
@@ -65,6 +65,7 @@
 .content {
   @include m.container;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
   padding-block: var(--space-6) var(--space-12);
   background: var(--color-surface);
@@ -81,12 +82,10 @@
   display: grid;
   gap: var(--space-4);
 
-  @include m.up(t.$breakpoint-sm) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   @include m.up(t.$breakpoint-md) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -94,12 +93,22 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-3);
   background: var(--color-bg);
   border-radius: var(--radius-sm);
 
+  @include m.up(t.$breakpoint-md) {
+    padding: var(--space-4);
+  }
+
   h2 {
-    font-size: 1.25rem;
+    font-size: 0.875rem;
+    hyphens: auto;
+    overflow-wrap: break-word;
+
+    @include m.up(t.$breakpoint-md) {
+      font-size: 1.25rem;
+    }
   }
 
   span {
@@ -115,12 +124,17 @@
 .categories__visual {
   display: grid;
   place-items: center;
-  height: 10rem;
+  height: 6.5rem;
+
+  @include m.up(t.$breakpoint-md) {
+    height: 10rem;
+  }
   color: hsl(var(--hue) 55% 30%);
   background: linear-gradient(135deg, hsl(var(--hue) 70% 92%), hsl(var(--hue) 60% 78%));
 }
 
 .row {
+  min-width: 0;
   padding: var(--space-4);
   background: var(--color-bg);
   border-radius: var(--radius-sm);
@@ -147,8 +161,11 @@
   }
 }
 
+// Les cartes s'étirent pour remplir la largeur, et la rangée défile s'il y en a trop.
 .row__track {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(11.5rem, 1fr);
   gap: var(--space-4);
   overflow-x: auto;
   padding-bottom: var(--space-2);
@@ -156,6 +173,5 @@
 }
 
 .row__item {
-  flex: 0 0 11.5rem;
   scroll-snap-align: start;
 }

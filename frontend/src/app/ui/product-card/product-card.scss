@@ -21,7 +21,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   background: linear-gradient(135deg, hsl(var(--hue) 70% 92%), hsl(var(--hue) 60% 80%));
 }
 
