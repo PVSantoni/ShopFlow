@@ -1,0 +1,38 @@
+<div class="field" [class.field--error]="error()">
+  <label class="field__label" [for]="id">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true">*</span>
+    }
+  </label>
+
+  @if (multiline()) {
+    <textarea
+      class="field__control"
+      rows="5"
+      [id]="id"
+      [value]="value()"
+      [placeholder]="placeholder()"
+      [required]="required()"
+      [attr.aria-invalid]="!!error()"
+      [attr.aria-describedby]="id + '-msg'"
+      (input)="onInput($event)"
+    ></textarea>
+  } @else {
+    <input
+      class="field__control"
+      [id]="id"
+      [type]="type()"
+      [value]="value()"
+      [placeholder]="placeholder()"
+      [required]="required()"
+      [attr.aria-invalid]="!!error()"
+      [attr.aria-describedby]="id + '-msg'"
+      (input)="onInput($event)"
+    />
+  }
+
+  @if (error() || hint()) {
+    <p class="field__msg" [id]="id + '-msg'">{{ error() || hint() }}</p>
+  }
+</div>

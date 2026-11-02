@@ -1,0 +1,24 @@
+@mixin dark-palette {
+  color-scheme: dark;
+  --color-bg: #0f1218;
+  --color-surface: #181c25;
+  --color-border: #2a303c;
+  --color-text: #eef0f4;
+  --color-text-muted: #9aa3b2;
+  --color-primary: #818cf8;
+  --color-primary-hover: #a5b4fc;
+  --color-on-primary: #0f1218;
+  --color-header-bg: #0a0d12;
+  --color-subheader-bg: #151a22;
+  --color-price: #ff8a65;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-palette;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include dark-palette;
+}

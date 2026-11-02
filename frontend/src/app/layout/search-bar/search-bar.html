@@ -1,0 +1,47 @@
+<form class="search" role="search" (submit)="$event.preventDefault(); submit()">
+  <app-dropdown class="search__category">
+    <span trigger class="search__category-btn">
+      <span>{{ category() }}</span>
+      <svg lucideChevronDown [size]="14"></svg>
+    </span>
+    <ul class="search__options" role="listbox">
+      @for (c of categories; track c) {
+        <li>
+          <button type="button" role="option" [attr.aria-selected]="c === category()" (click)="category.set(c)">
+            {{ c }}
+          </button>
+        </li>
+      }
+    </ul>
+  </app-dropdown>
+
+  <input
+    class="search__input"
+    type="search"
+    autocomplete="off"
+    placeholder="Rechercher un composant, un kit, une référence"
+    aria-label="Rechercher"
+    role="combobox"
+    [attr.aria-expanded]="panelOpen()"
+    [value]="query()"
+    (input)="onInput($event)"
+    (focus)="focused.set(true)"
+    (blur)="focused.set(false)"
+    (keydown)="onKeydown($event)"
+  />
+
+  <button class="search__submit" type="submit" aria-label="Lancer la recherche">
+    <svg lucideSearch [size]="20" [strokeWidth]="2.25"></svg>
+  </button>
+
+  @if (panelOpen()) {
+    <ul class="search__suggestions" role="listbox" (mousedown)="$event.preventDefault()">
+      @for (s of suggestions(); track s; let i = $index) {
+        <li role="option" [class.is-active]="i === active()" [attr.aria-selected]="i === active()" (click)="pick(s)">
+          <svg lucideSearch [size]="16"></svg>
+          {{ s }}
+        </li>
+      }
+    </ul>
+  }
+</form>

@@ -1,0 +1,196 @@
+@use '../../../styles/mixins' as m;
+@use '../../../styles/tokens' as t;
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  color: var(--color-header-text);
+}
+
+.navbar__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-header-bg);
+
+  @include m.up(t.$breakpoint-md) {
+    flex-wrap: nowrap;
+    padding-inline: var(--space-6);
+  }
+}
+
+.navbar__brand {
+  order: 1;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+
+  span { color: var(--color-accent); }
+}
+
+.navbar__actions {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+
+  @include m.up(t.$breakpoint-md) {
+    order: 3;
+    margin-left: 0;
+  }
+}
+
+.navbar__search {
+  order: 3;
+  flex: 1 1 100%;
+
+  @include m.up(t.$breakpoint-md) {
+    order: 2;
+    flex: 1 1 auto;
+  }
+}
+
+.navbar__action,
+.navbar__cart {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  line-height: 1.2;
+
+  &:hover { border-color: var(--color-header-text); }
+
+  small { font-size: 0.75rem; color: var(--color-header-muted); }
+  strong { display: flex; align-items: center; gap: var(--space-1); font-size: 0.875rem; }
+}
+
+.navbar__action small {
+  display: none;
+
+  @include m.up(t.$breakpoint-sm) { display: block; }
+}
+
+.navbar__cart {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.navbar__cart-icon {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+// Pastille en coin, pour ne pas recouvrir l'icône
+.navbar__cart-count {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.125rem;
+  text-align: center;
+}
+
+// Menu compte
+.menu {
+  display: grid;
+  gap: var(--space-3);
+  width: 15rem;
+
+  &__hint {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+
+    a { color: var(--color-primary); &:hover { text-decoration: underline; } }
+  }
+
+  hr { margin: 0; border: 0; border-top: 1px solid var(--color-border); }
+
+  ul { display: grid; gap: var(--space-1); }
+
+  li a {
+    display: block;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+
+    &:hover { background: var(--color-surface); }
+  }
+}
+
+// Barre de catégories
+.navbar__sub {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-4);
+  background: var(--color-subheader-bg);
+
+  @include m.up(t.$breakpoint-md) { padding-inline: var(--space-6); }
+}
+
+.navbar__catalog-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 700;
+
+  &:hover { border-color: var(--color-header-text); }
+}
+
+.navbar__quick {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  a {
+    flex-shrink: 0;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    white-space: nowrap;
+
+    &:hover { border-color: var(--color-header-text); }
+  }
+}
+
+.mega {
+  display: grid;
+  gap: var(--space-1);
+  width: min(92vw, 34rem);
+
+  @include m.up(t.$breakpoint-sm) { grid-template-columns: repeat(2, 1fr); }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+
+    &:hover { background: var(--color-surface); }
+
+    svg { flex-shrink: 0; color: var(--color-primary); }
+    strong { display: block; font-size: 0.9375rem; }
+    small { color: var(--color-text-muted); font-size: 0.8125rem; }
+  }
+}

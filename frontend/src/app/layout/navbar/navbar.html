@@ -1,0 +1,60 @@
+<header class="navbar">
+  <div class="navbar__top">
+    <a class="navbar__brand" routerLink="/">Flow<span>Shop</span></a>
+
+    <app-search-bar class="navbar__search" />
+
+    <nav class="navbar__actions" aria-label="Compte">
+      <app-dropdown align="end" [hover]="true">
+        <span trigger class="navbar__action">
+          <small>Bonjour, identifiez-vous</small>
+          <strong>Compte <svg lucideChevronDown [size]="12"></svg></strong>
+        </span>
+        <div class="menu">
+          <a appButton variant="accent" [block]="true" routerLink="/connexion">Se connecter</a>
+          <p class="menu__hint">Nouveau client ? <a routerLink="/inscription">Créer un compte</a></p>
+          <hr />
+          <ul>
+            @for (l of accountLinks; track l.label) {
+              <li><a [routerLink]="l.path">{{ l.label }}</a></li>
+            }
+          </ul>
+        </div>
+      </app-dropdown>
+
+      <a class="navbar__cart" routerLink="/panier">
+        <span class="navbar__cart-icon">
+          <svg lucideShoppingCart [size]="28" [strokeWidth]="1.75" aria-hidden="true"></svg>
+          <span class="navbar__cart-count" [attr.aria-label]="cartCount() + ' articles'">{{ cartCount() > 99 ? '99+' : cartCount() }}</span>
+        </span>
+        <strong>Panier</strong>
+      </a>
+    </nav>
+  </div>
+
+  <div class="navbar__sub">
+    <app-dropdown class="navbar__catalog">
+      <span trigger class="navbar__catalog-btn">
+        <svg lucideMenu [size]="18"></svg>
+        Catalogue
+      </span>
+      <div class="mega">
+        @for (c of catalog; track c.label) {
+          <a class="mega__item" routerLink="/catalogue" [queryParams]="{ categorie: c.label }">
+            <svg [lucideIcon]="c.icon" [size]="28" [strokeWidth]="1.5"></svg>
+            <span>
+              <strong>{{ c.label }}</strong>
+              <small>{{ c.hint }}</small>
+            </span>
+          </a>
+        }
+      </div>
+    </app-dropdown>
+
+    <nav class="navbar__quick" aria-label="Accès rapide">
+      @for (l of quickLinks; track l.label) {
+        <a [routerLink]="l.path">{{ l.label }}</a>
+      }
+    </nav>
+  </div>
+</header>

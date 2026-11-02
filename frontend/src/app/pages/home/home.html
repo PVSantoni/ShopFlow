@@ -1,0 +1,55 @@
+<section class="hero" aria-label="Offres en vedette">
+  @let slide = slides[slideIndex()];
+  <div class="hero__slide" [style.--hue]="slide.hue">
+    <div class="hero__content">
+      <h1>{{ slide.title }}</h1>
+      <p>{{ slide.text }}</p>
+      <a appButton variant="accent" size="lg" routerLink="/catalogue">{{ slide.cta }}</a>
+    </div>
+  </div>
+  <button class="hero__nav hero__nav--prev" type="button" aria-label="Précédent" (click)="go(-1)">
+    <svg lucideChevronLeft [size]="40" [strokeWidth]="1.5"></svg>
+  </button>
+  <button class="hero__nav hero__nav--next" type="button" aria-label="Suivant" (click)="go(1)">
+    <svg lucideChevronRight [size]="40" [strokeWidth]="1.5"></svg>
+  </button>
+</section>
+
+<div class="content">
+  <section class="categories" aria-label="Catégories">
+    @for (c of categories; track c.title) {
+      <a class="categories__card" routerLink="/catalogue">
+        <h2>{{ c.title }}</h2>
+        <div class="categories__visual" [style.--hue]="c.hue">
+          <svg [lucideIcon]="c.icon" [size]="88" [strokeWidth]="1" aria-hidden="true"></svg>
+        </div>
+        <span>Voir plus</span>
+      </a>
+    }
+  </section>
+
+  <section class="row">
+    <header class="row__head">
+      <h2>Offres du jour</h2>
+      <a routerLink="/catalogue">Voir toutes les offres</a>
+    </header>
+    <div class="row__track">
+      @for (p of deals; track p.id) {
+        <app-product-card class="row__item" [product]="p" />
+      }
+    </div>
+  </section>
+
+  <section class="row">
+    <header class="row__head">
+      <h2>Meilleures ventes</h2>
+      <a routerLink="/catalogue">Voir plus</a>
+    </header>
+    <div class="row__track">
+      @for (p of bestSellers; track p.id) {
+        <app-product-card class="row__item" [product]="p" />
+      }
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,13 @@
+<app-page-shell title="Nous contacter" subtitle="Une question sur un produit ou une commande ? Nous répondons sous 48h.">
+  @if (sent()) {
+    <p class="notice" role="status">Merci, votre message a bien été pris en compte.</p>
+  } @else {
+    <form class="form" novalidate (submit)="$event.preventDefault(); submit()">
+      <app-input label="Nom" [required]="true" [(value)]="name" [error]="submitted() ? errors().name : ''" />
+      <app-input label="E-mail" type="email" [required]="true" [(value)]="email" [error]="submitted() ? errors().email : ''" />
+      <app-input label="Sujet" [(value)]="subject" hint="Ex. : commande n°, compatibilité d'un capteur…" />
+      <app-input label="Message" [multiline]="true" [required]="true" [(value)]="message" [error]="submitted() ? errors().message : ''" />
+      <button appButton variant="accent" size="lg" type="submit">Envoyer</button>
+    </form>
+  }
+</app-page-shell>
