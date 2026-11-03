@@ -2,12 +2,14 @@
 
 namespace App\Commande\Application\Port;
 
+use App\Commande\Domain\LigneCommande;
+
 interface PanierReader
 {
     /**
-     * Renvoie une liste vide si le panier n'existe pas ou est vide.
+     * Liste vide si le panier est inconnu ou vide.
      *
-     * @return list<LignePanier>
+     * @return list<LigneCommande>
      */
     public function lignes(string $panierToken): array;
 }

@@ -23,9 +23,11 @@ services:
 
     # Hexagonal (Commande) : ports -> adaptateurs. Les tests utilisent InMemoryCommandeRepository à la place.
     App\Commande\Application\Port\CommandeRepository: '@App\Commande\Infrastructure\Doctrine\DoctrineCommandeRepository'
+    # App\Commande\Application\Port\CommandeRepository: '@App\Commande\Infrastructure\InMemory\InMemoryCommandeRepository'
+
     App\Commande\Application\Port\PaiementGateway: '@App\Commande\Infrastructure\Paiement\PspGateway'
-    App\Commande\Application\Port\Horloge: '@App\Commande\Infrastructure\Horloge\SystemHorloge'
     App\Commande\Application\Port\PanierReader: '@App\Commande\Infrastructure\Panier\PanierApiReader'
+    App\Commande\Application\Port\Horloge: '@App\Commande\Infrastructure\Horloge\SystemHorloge'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

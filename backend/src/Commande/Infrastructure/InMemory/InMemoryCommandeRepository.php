@@ -8,22 +8,22 @@ use App\Commande\Domain\Commande;
 /** Adaptateur pour les tests : aucune base de données. */
 final class InMemoryCommandeRepository implements CommandeRepository
 {
-    /** @var array<string, Commande> */
+    /** @var list<Commande> */
     private array $commandes = [];
-    private int $sequence = 0;
 
     public function nextId(): string
     {
-        return 'commande-' . ++$this->sequence;
+        return 'commande-' . (count($this->commandes) + 1);
     }
 
     public function save(Commande $commande): void
     {
-        $this->commandes[$commande->id()] = $commande;
+        $this->commandes[] = $commande;
     }
 
-    public function find(string $id): ?Commande
+    /** @return list<Commande> */
+    public function toutes(): array
     {
-        return $this->commandes[$id] ?? null;
+        return $this->commandes;
     }
 }
