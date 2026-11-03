@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   LucideBatteryCharging,
@@ -12,6 +12,7 @@ import {
   LucideShoppingCart,
   LucideWrench,
 } from '@lucide/angular';
+import { CartService } from '../../core/services/cart.service';
 import { Button } from '../../ui/button/button';
 import { Dropdown } from '../../ui/dropdown/dropdown';
 import { SearchBar } from '../search-bar/search-bar';
@@ -33,7 +34,7 @@ import { SearchBar } from '../search-bar/search-bar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Navbar {
-  protected readonly cartCount = signal(0);
+  protected readonly cartCount = inject(CartService).count;
 
   protected readonly catalog = [
     { label: 'Microcontrôleurs', icon: LucideCpu, hint: 'Arduino, ESP32, Pico' },

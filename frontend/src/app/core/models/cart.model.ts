@@ -12,7 +12,8 @@ export interface CartItem {
 }
 
 export interface Cart {
-  id: Id;
+  /** Token du panier (UUID), null tant qu'aucun produit n'a été ajouté. */
+  id: string | null;
   items: CartItem[];
   promoCode?: string;
   subtotalCents: Cents;

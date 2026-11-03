@@ -10,6 +10,7 @@ export const routes: Routes = [
     component: MainLayout,
     children: [
       { path: '', pathMatch: 'full', title: 'FlowShop', loadComponent: () => import('./pages/home/home').then((m) => m.Home) },
+      { path: 'panier', title: 'Panier - FlowShop', loadComponent: () => import('./pages/cart/cart').then((m) => m.Cart) },
       { path: 'faq', title: 'FAQ - FlowShop', loadComponent: () => import('./pages/faq/faq').then((m) => m.Faq) },
       { path: 'contact', title: 'Contact - FlowShop', loadComponent: () => import('./pages/contact/contact').then((m) => m.Contact) },
       { path: 'mentions-legales', title: 'Mentions légales - FlowShop', data: { doc: MENTIONS_LEGALES }, loadComponent: legal },

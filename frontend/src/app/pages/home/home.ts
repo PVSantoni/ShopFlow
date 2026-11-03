@@ -1,13 +1,17 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, map, of } from 'rxjs';
 import {
   LucideChevronLeft,
   LucideChevronRight,
   LucideDynamicIcon,
 } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
+import { toCardItem } from '../../core/mappers/product-card.mapper';
+import { ProductService } from '../../core/services/product.service';
 import { Button } from '../../ui/button/button';
 import { ProductCard } from '../../ui/product-card/product-card';
-import { BEST_SELLERS, CATEGORIES, DEALS, SLIDES } from './home.data';
+import { CATEGORIES, SLIDES } from './home.data';
 
 @Component({
   selector: 'app-home',
@@ -26,8 +30,20 @@ import { BEST_SELLERS, CATEGORIES, DEALS, SLIDES } from './home.data';
 export class Home {
   protected readonly slides = SLIDES;
   protected readonly categories = CATEGORIES;
-  protected readonly deals = DEALS;
-  protected readonly bestSellers = BEST_SELLERS;
+
+  private readonly products = toSignal(
+    inject(ProductService)
+      .list({ pageSize: 50 })
+      .pipe(
+        map((page) => page.items),
+        catchError(() => of([])),
+      ),
+    { initialValue: [] },
+  );
+  /** Produits en promo. */
+  protected readonly deals = computed(() => this.products().filter((p) => p.compareAtPriceCents).slice(0, 5).map(toCardItem));
+  /** Pas encore de ventes côté API : on affiche les produits sans promo. */
+  protected readonly bestSellers = computed(() => this.products().filter((p) => !p.compareAtPriceCents).slice(0, 6).map(toCardItem));
 
   protected readonly slideIndex = signal(0);
 

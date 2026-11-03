@@ -34,7 +34,7 @@
       <a routerLink="/catalogue">Voir toutes les offres</a>
     </header>
     <div class="row__track">
-      @for (p of deals; track p.id) {
+      @for (p of deals(); track p.id) {
         <app-product-card class="row__item" [product]="p" />
       }
     </div>
@@ -46,7 +46,7 @@
       <a routerLink="/catalogue">Voir plus</a>
     </header>
     <div class="row__track">
-      @for (p of bestSellers; track p.id) {
+      @for (p of bestSellers(); track p.id) {
         <app-product-card class="row__item" [product]="p" />
       }
     </div>
