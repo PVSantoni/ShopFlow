@@ -6,6 +6,8 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '16'
 
+        types:
+            lignes_commande: App\Commande\Infrastructure\Doctrine\LignesCommandeType
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
@@ -30,6 +32,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Panier/Entity'
                 prefix: 'App\Panier\Entity'
                 alias: Panier
+            Commande:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Commande/Infrastructure/Doctrine/mapping'
+                prefix: 'App\Commande\Domain'
+                alias: Commande
         controller_resolver:
             auto_mapping: false
 

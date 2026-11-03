@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <!-- Le Domain reste du PHP pur : le mapping vit ici, pas en attributs sur la classe. -->
+    <entity name="App\Commande\Domain\Commande" table="commande">
+        <id name="id" type="string" length="36">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="statut" type="string" length="30" enum-type="App\Commande\Domain\StatutCommande"/>
+        <field name="referencePaiement" type="string" length="100" nullable="true"/>
+        <field name="creeeLe" type="datetime_immutable"/>
+        <field name="lignes" type="lignes_commande"/>
+    </entity>
+</doctrine-mapping>

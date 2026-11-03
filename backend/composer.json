@@ -22,6 +22,7 @@
     "require-dev": {
         "deptrac/deptrac": "^4.7",
         "doctrine/doctrine-fixtures-bundle": "^4.3",
+        "phpunit/phpunit": "^12.5",
         "symfony/maker-bundle": "^1.68"
     },
     "config": {

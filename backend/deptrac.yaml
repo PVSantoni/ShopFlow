@@ -11,10 +11,23 @@ deptrac:
       collectors:
         - type: directory
           value: src/Panier/.*
-    - name: Commande
+    # Commande est hexagonal : une couche par côté de l'hexagone.
+    - name: CommandeDomain
       collectors:
         - type: directory
-          value: src/Commande/.*
+          value: src/Commande/Domain/.*
+    - name: CommandeApplication
+      collectors:
+        - type: directory
+          value: src/Commande/Application/.*
+    - name: CommandeInfrastructure
+      collectors:
+        - type: directory
+          value: src/Commande/Infrastructure/.*
+    - name: CommandeUI
+      collectors:
+        - type: directory
+          value: src/Commande/UI/.*
     - name: Paiement
       collectors:
         - type: directory
@@ -27,23 +40,51 @@ deptrac:
       collectors:
         - type: directory
           value: src/Notification/.*
+    # Bibliothèques surveillées : le Domain de Commande ne doit dépendre d'aucune des deux.
+    - name: Symfony
+      collectors:
+        - type: classLike
+          value: ^Symfony\\
+    - name: Doctrine
+      collectors:
+        - type: classLike
+          value: ^Doctrine\\
 
   # Dépendances autorisées entre bounded contexts (cf. docs/ADR-002.md).
   # Tout ce qui n'est pas listé ici est interdit.
   ruleset:
-    Catalogue: ~
+    Symfony: ~
+    Doctrine: ~
+    Catalogue:
+      - Symfony
+      - Doctrine
     Panier:
       - Catalogue
-    Commande:
+      - Symfony
+      - Doctrine
+    # Domain : PHP pur, aucune dépendance (ni autre module, ni Symfony, ni Doctrine).
+    CommandeDomain: ~
+    CommandeApplication:
+      - CommandeDomain
+    CommandeInfrastructure:
+      - CommandeDomain
+      - CommandeApplication
       - Panier
-      - Paiement
+      - Symfony
+      - Doctrine
+    CommandeUI:
+      - CommandeDomain
+      - CommandeApplication
+      - Symfony
     # Paiement ne dépend pas de Commande : le sens Paiement -> Commande
     # passe par des événements ou une interface, pas par un `use` direct.
     # Cela évite la dépendance circulaire signalée dans l'ADR-002.
     Paiement: ~
     Livraison:
-      - Commande
+      - CommandeDomain
+      - CommandeApplication
     Notification:
-      - Commande
+      - CommandeDomain
+      - CommandeApplication
       - Paiement
       - Livraison
