@@ -142,6 +142,15 @@ class Product
         return $this->stock;
     }
 
+    public function decrementerStock(int $quantite): void
+    {
+        if ($quantite > $this->stock) {
+            throw new \DomainException(sprintf('Stock insuffisant pour %s : %d demandé, %d disponible.', $this->sku, $quantite, $this->stock));
+        }
+
+        $this->stock -= $quantite;
+    }
+
     public function isActive(): bool
     {
         return $this->active;

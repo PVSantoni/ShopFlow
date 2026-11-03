@@ -7,6 +7,8 @@ use App\Commande\Application\Port\Horloge;
 use App\Commande\Application\Port\PaiementGateway;
 use App\Commande\Application\Port\PanierReader;
 use App\Commande\Domain\Commande;
+use App\Commande\Domain\Event\CommandePassee;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class PasserCommandeHandler
 {
@@ -15,6 +17,7 @@ final readonly class PasserCommandeHandler
         private PanierReader $paniers,
         private PaiementGateway $paiement,
         private Horloge $horloge,
+        private MessageBusInterface $bus,
     ) {
     }
 
@@ -29,6 +32,12 @@ final readonly class PasserCommandeHandler
 
         $this->paiement->payer($commande->id(), $commande->totalCents());
         $this->commandes->save($commande);
+
+        $this->bus->dispatch(new CommandePassee(
+            $commande->id(),
+            $commande->lignes(),
+            $commande->creeeLe(),
+        ));
 
         return $commande;
     }
