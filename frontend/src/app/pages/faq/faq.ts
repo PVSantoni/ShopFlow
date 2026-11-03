@@ -17,7 +17,7 @@ import { PageShell } from '../../ui/page-shell/page-shell';
     </app-page-shell>
   `,
   styles: `
-    .faq { padding: 0 var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+    .faq { padding: 0 var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); box-shadow: var(--shadow-1); }
     app-accordion-item:last-child { border-bottom: 0; }
     .faq__more { margin-top: var(--space-6); color: var(--color-text-muted); }
     .faq__more a { color: var(--color-primary); text-decoration: underline; }

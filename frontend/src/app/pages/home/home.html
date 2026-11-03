@@ -17,9 +17,9 @@
 
 <div class="content">
   <section class="categories" aria-label="Catégories">
-    @for (c of categories; track c.title) {
-      <a class="categories__card" routerLink="/catalogue">
-        <h2>{{ c.title }}</h2>
+    @for (c of categories; track c.slug) {
+      <a class="categories__card" routerLink="/catalogue" [queryParams]="{ categorie: c.slug }">
+        <h2>{{ c.name }}</h2>
         <div class="categories__visual" [style.--hue]="c.hue">
           <svg [lucideIcon]="c.icon" [size]="88" [strokeWidth]="1" aria-hidden="true"></svg>
         </div>

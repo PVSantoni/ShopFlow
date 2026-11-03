@@ -13,7 +13,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       background: var(--color-price);
       color: #fff;
     }
-    :host([tone='dark']) { background: var(--color-subheader-bg); }
+    :host([tone='dark']) { background: var(--color-badge-dark); }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

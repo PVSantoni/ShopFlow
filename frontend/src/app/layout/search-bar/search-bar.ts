@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { LucideChevronDown, LucideSearch } from '@lucide/angular';
+import { CATALOG_CATEGORIES } from '../../core/data/categories';
 import { Dropdown } from '../../ui/dropdown/dropdown';
 
-const CATEGORIES = ['Toutes', 'Microcontrôleurs', 'Capteurs', 'Kits robotiques', 'Moteurs et servos', 'Alimentation', 'Outillage'];
+const ALL = { slug: '', name: 'Toutes' };
+const CATEGORIES = [ALL, ...CATALOG_CATEGORIES];
 
 const SUGGESTIONS = [
   'Arduino Uno R4 WiFi',
@@ -34,7 +36,7 @@ export class SearchBar {
   private readonly router = inject(Router);
 
   protected readonly categories = CATEGORIES;
-  protected readonly category = signal(CATEGORIES[0]);
+  protected readonly category = signal<{ slug: string; name: string }>(ALL);
   protected readonly query = signal('');
   protected readonly focused = signal(false);
   protected readonly active = signal(-1);
@@ -76,9 +78,8 @@ export class SearchBar {
     if (!q) return;
     this.query.set(q);
     this.focused.set(false);
-    const cat = this.category();
     this.router.navigate(['/catalogue'], {
-      queryParams: { q, ...(cat !== CATEGORIES[0] && { categorie: cat }) },
+      queryParams: { q, categorie: this.category().slug || null },
     });
   }
 }

@@ -19,10 +19,15 @@ const VISUALS: Record<string, { icon: LucideIcon; hue: number }> = {
 };
 const DEFAULT_VISUAL = { icon: LucideCpu, hue: 215 };
 
+export function visualOf(p: Product): { icon: LucideIcon; hue: number } {
+  return VISUALS[p.category.slug] ?? DEFAULT_VISUAL;
+}
+
 export function toCardItem(p: Product): ProductCardItem {
-  const { icon, hue } = VISUALS[p.category.slug] ?? DEFAULT_VISUAL;
+  const { icon, hue } = visualOf(p);
   return {
     id: p.id,
+    slug: p.slug,
     title: p.name,
     price: p.priceCents / 100,
     originalPrice: p.compareAtPriceCents ? p.compareAtPriceCents / 100 : undefined,
@@ -31,6 +36,7 @@ export function toCardItem(p: Product): ProductCardItem {
     icon,
     hue,
     badge: p.stock === 0 ? 'Rupture' : p.stock <= 10 ? 'Stock limité' : undefined,
+    stock: p.stock,
     outOfStock: p.stock === 0,
   };
 }

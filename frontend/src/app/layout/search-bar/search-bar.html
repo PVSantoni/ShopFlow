@@ -1,14 +1,14 @@
 <form class="search" role="search" (submit)="$event.preventDefault(); submit()">
   <app-dropdown class="search__category">
     <span trigger class="search__category-btn">
-      <span>{{ category() }}</span>
+      <span>{{ category().name }}</span>
       <svg lucideChevronDown [size]="14"></svg>
     </span>
     <ul class="search__options" role="listbox">
-      @for (c of categories; track c) {
+      @for (c of categories; track c.slug) {
         <li>
-          <button type="button" role="option" [attr.aria-selected]="c === category()" (click)="category.set(c)">
-            {{ c }}
+          <button type="button" role="option" [attr.aria-selected]="c.slug === category().slug" (click)="category.set(c)">
+            {{ c.name }}
           </button>
         </li>
       }

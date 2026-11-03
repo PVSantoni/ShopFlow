@@ -21,7 +21,7 @@ import { LegalDoc } from './legal.data';
     </app-page-shell>
   `,
   styles: `
-    .legal { display: grid; gap: var(--space-6); padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+    .legal { display: grid; gap: var(--space-6); padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); box-shadow: var(--shadow-1); }
     h2 { font-size: 1.125rem; margin-bottom: var(--space-2); }
     p + p { margin-top: var(--space-2); }
     p { color: var(--color-text-muted); }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { API_URL } from '../api';
-import { ProductPage, ProductQuery } from '../models';
+import { Product, ProductPage, ProductQuery } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -13,5 +13,9 @@ export class ProductService {
       string | number | boolean
     >;
     return this.http.get<ProductPage>(`${API_URL}/products`, { params });
+  }
+
+  bySlug(slug: string) {
+    return this.http.get<Product>(`${API_URL}/products/${encodeURIComponent(slug)}`);
   }
 }

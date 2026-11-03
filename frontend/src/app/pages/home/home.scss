@@ -68,7 +68,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
   padding-block: var(--space-6) var(--space-12);
-  background: var(--color-surface);
+  background: var(--color-canvas);
 }
 
 .categories,
@@ -95,6 +95,7 @@
   gap: var(--space-3);
   padding: var(--space-3);
   background: var(--color-bg);
+  box-shadow: var(--shadow-1);
   border-radius: var(--radius-sm);
 
   @include m.up(t.$breakpoint-md) {
@@ -137,6 +138,7 @@
   min-width: 0;
   padding: var(--space-4);
   background: var(--color-bg);
+  box-shadow: var(--shadow-1);
   border-radius: var(--radius-sm);
 }
 

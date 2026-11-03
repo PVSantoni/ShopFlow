@@ -14,7 +14,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     </div>
   `,
   styles: `
-    :host { display: block; background: var(--color-surface); }
+    :host { display: block; background: var(--color-canvas); }
     .shell {
       max-width: 52rem; margin-inline: auto;
       padding: var(--space-8) var(--space-4) var(--space-16);

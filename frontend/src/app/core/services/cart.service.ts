@@ -31,6 +31,19 @@ export class CartService {
       .pipe(tap((c) => this.set(c)));
   }
 
+  /** Après une commande réussie : le panier n'est pas vidé côté API, on oublie son token. */
+  forget(): void {
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+    } catch {}
+    this.cart.set(null);
+  }
+
+  /** En-tête X-Cart-Token pour les autres appels qui portent sur le panier courant. */
+  headers(): Record<string, string> {
+    return this.options().headers;
+  }
+
   private set(cart: Cart): void {
     this.cart.set(cart);
     try {

@@ -1,13 +1,20 @@
 @mixin dark-palette {
   color-scheme: dark;
-  --color-bg: #0f1218;
-  --color-surface: #181c25;
-  --color-border: #2a303c;
+  --color-canvas: #0b0e13;
+  --color-bg: #151a22;
+  --color-surface: #1e2531;
+  --color-raised: #212836;
+  --color-badge-dark: #3b4558;
+  --color-success: #3ccf9e;
+  --color-border: #2c3342;
   --color-text: #eef0f4;
   --color-text-muted: #9aa3b2;
   --color-primary: #818cf8;
   --color-primary-hover: #a5b4fc;
   --color-on-primary: #0f1218;
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(255 255 255 / 0.03);
+  --shadow-2: 0 4px 14px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 12px 32px rgb(0 0 0 / 0.65);
   --color-header-bg: #0a0d12;
   --color-subheader-bg: #151a22;
   --color-price: #ff8a65;

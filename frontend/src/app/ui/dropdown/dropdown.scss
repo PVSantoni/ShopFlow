@@ -16,16 +16,17 @@
 
 .dropdown__panel {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0;
   z-index: 200;
   min-width: 14rem;
   padding: var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-bg);
+  background: var(--color-raised);
   color: var(--color-text);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+  font-size: 0.9375rem;
+  box-shadow: var(--shadow-3);
 
   &--end {
     left: auto;

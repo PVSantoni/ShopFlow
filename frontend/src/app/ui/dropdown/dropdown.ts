@@ -23,7 +23,7 @@ import {
     @if (open()) {
       <div
         class="dropdown__panel"
-        [class.dropdown__panel--end]="align() === 'end'"
+        [class.dropdown__panel--end]="placement() === 'end'"
         (click)="onPanelClick($event)"
       >
         <ng-content />
@@ -31,12 +31,14 @@ import {
     }
   `,
   styleUrl: './dropdown.scss',
+  host: { '[class.is-open]': 'open()' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Dropdown {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  readonly align = input<'start' | 'end'>('start');
+  // Pas `align` : c'est un attribut HTML qui applique un text-align à la balise.
+  readonly placement = input<'start' | 'end'>('start');
   readonly hover = input(false);
   readonly closeOnSelect = input(true);
 

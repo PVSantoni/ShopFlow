@@ -1,10 +1,15 @@
 @use '../../../styles/mixins' as m;
 @use '../../../styles/tokens' as t;
 
-.navbar {
+// Le sticky doit être sur l'élément hôte : un <app-navbar> inline ne portait pas la barre.
+:host {
+  display: block;
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.navbar {
   color: var(--color-header-text);
 }
 
@@ -54,6 +59,11 @@
   }
 }
 
+// Déclencheur actif : on voit quel menu est ouvert.
+app-dropdown.is-open .navbar__action,
+app-dropdown.is-open .navbar__cart,
+app-dropdown.is-open .navbar__catalog-btn { background: rgb(255 255 255 / 0.16); }
+
 .navbar__action,
 .navbar__cart {
   display: flex;
@@ -63,7 +73,7 @@
   border-radius: var(--radius-sm);
   line-height: 1.2;
 
-  &:hover { border-color: var(--color-header-text); }
+  &:hover { background: rgb(255 255 255 / 0.1); }
 
   small { font-size: 0.75rem; color: var(--color-header-muted); }
   strong { display: flex; align-items: center; gap: var(--space-1); font-size: 0.875rem; }
@@ -102,30 +112,88 @@
   font-weight: 700;
   line-height: 1.125rem;
   text-align: center;
+  animation: cart-bump 0.35s ease-out;
+}
+
+@keyframes cart-bump {
+  0% { transform: scale(0.4); }
+  60% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.minicart {
+  display: grid;
+  gap: var(--space-3);
+  width: min(88vw, 21rem);
+
+  &__list {
+    display: grid;
+    max-height: 18rem;
+    overflow-y: auto;
+
+    li {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2px var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border);
+
+      &:first-child { padding-top: 0; }
+    }
+  }
+
+  &__name {
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__line { grid-row: 1; grid-column: 2; }
+
+  &__qty {
+    grid-column: 1 / -1;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  &__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+
+    strong { font-size: 1.125rem; }
+  }
+
+  &__empty { padding: var(--space-2) 0; color: var(--color-text-muted); }
 }
 
 // Menu compte
 .menu {
   display: grid;
   gap: var(--space-3);
-  width: 15rem;
+  width: min(88vw, 17rem);
 
   &__hint {
-    font-size: 0.8125rem;
+    text-align: center;
+    font-size: 0.875rem;
     color: var(--color-text-muted);
 
-    a { color: var(--color-primary); &:hover { text-decoration: underline; } }
+    a { color: var(--color-primary); font-weight: 600; &:hover { text-decoration: underline; } }
   }
 
   hr { margin: 0; border: 0; border-top: 1px solid var(--color-border); }
 
-  ul { display: grid; gap: var(--space-1); }
+  ul { display: grid; gap: 2px; }
 
   li a {
     display: block;
-    padding: var(--space-1) var(--space-2);
+    padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
-    font-size: 0.875rem;
 
     &:hover { background: var(--color-surface); }
   }
@@ -152,7 +220,7 @@
   font-size: 0.875rem;
   font-weight: 700;
 
-  &:hover { border-color: var(--color-header-text); }
+  &:hover { background: rgb(255 255 255 / 0.1); }
 }
 
 .navbar__quick {
@@ -169,14 +237,14 @@
     font-size: 0.875rem;
     white-space: nowrap;
 
-    &:hover { border-color: var(--color-header-text); }
+    &:hover { background: rgb(255 255 255 / 0.1); }
   }
 }
 
 .mega {
   display: grid;
-  gap: var(--space-1);
-  width: min(92vw, 34rem);
+  gap: 2px;
+  width: min(88vw, 36rem);
 
   @include m.up(t.$breakpoint-sm) { grid-template-columns: repeat(2, 1fr); }
 
@@ -189,8 +257,16 @@
 
     &:hover { background: var(--color-surface); }
 
-    svg { flex-shrink: 0; color: var(--color-primary); }
-    strong { display: block; font-size: 0.9375rem; }
-    small { color: var(--color-text-muted); font-size: 0.8125rem; }
+    svg {
+      flex-shrink: 0;
+      box-sizing: content-box;
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      color: var(--color-primary);
+    }
+
+    strong { display: block; font-size: 1rem; }
+    small { display: block; color: var(--color-text-muted); font-size: 0.875rem; line-height: 1.3; }
   }
 }

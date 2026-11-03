@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { LucideDynamicIcon, LucideIcon } from '@lucide/angular';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { LucideCheck, LucideDynamicIcon, LucideIcon } from '@lucide/angular';
 import { CartService } from '../../core/services/cart.service';
 import { Button } from '../button/button';
 import { Badge } from '../badge/badge';
@@ -9,6 +10,7 @@ import { Rating } from '../rating/rating';
 /** Données d'affichage d'une carte. Un mapper Product -> ProductCardItem viendra avec l'API. */
 export interface ProductCardItem {
   id: number;
+  slug: string;
   title: string;
   /** Prix en euros (affichage). */
   price: number;
@@ -18,12 +20,14 @@ export interface ProductCardItem {
   icon: LucideIcon;
   hue: number;
   badge?: string;
+  /** Quantité disponible. */
+  stock: number;
   outOfStock?: boolean;
 }
 
 @Component({
   selector: 'app-product-card',
-  imports: [LucideDynamicIcon, Button, Badge, Price, Rating],
+  imports: [RouterLink, LucideCheck, LucideDynamicIcon, Button, Badge, Price, Rating],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,8 +42,15 @@ export class ProductCard {
     return originalPrice ? Math.round((1 - price / originalPrice) * 100) : 0;
   });
 
+  /** Affiche « Ajouté » un court instant pour confirmer l'ajout. */
+  protected readonly added = signal(false);
+
   protected add(): void {
     this.cart.add(this.product().id).subscribe({
+      next: () => {
+        this.added.set(true);
+        setTimeout(() => this.added.set(false), 1500);
+      },
       error: (e) => alert(e.error?.message ?? "Impossible d'ajouter au panier."),
     });
   }

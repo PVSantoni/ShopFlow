@@ -10,7 +10,7 @@ let nextId = 0;
 })
 export class Input {
   readonly label = input.required<string>();
-  readonly type = input<'text' | 'email' | 'password' | 'tel' | 'search'>('text');
+  readonly type = input<'text' | 'email' | 'password' | 'tel' | 'search' | 'number'>('text');
   readonly multiline = input(false);
   readonly placeholder = input('');
   readonly hint = input('');

@@ -5,7 +5,7 @@
       <ul>
         <li><a routerLink="/catalogue">Catalogue</a></li>
         <li><a routerLink="/catalogue">Offres du jour</a></li>
-        <li><a routerLink="/catalogue">Kits robotiques</a></li>
+        <li><a routerLink="/catalogue" [queryParams]="{ categorie: 'kits-robotiques' }">Kits robotiques</a></li>
       </ul>
     </nav>
 
@@ -28,6 +28,10 @@
         <li><a routerLink="/confidentialite">Confidentialité</a></li>
       </ul>
     </nav>
-  </div>
 
+    <div class="footer__col">
+      <h2>Thème</h2>
+      <app-theme-toggle />
+    </div>
+  </div>
 </footer>

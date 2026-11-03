@@ -72,3 +72,23 @@ export interface CheckoutSession {
   paymentUrl?: string;
   clientSecret?: string;
 }
+
+export type PlacedOrderStatus = 'en_attente_paiement' | 'payee' | 'paiement_refuse';
+
+export interface PlacedOrderItem {
+  productId: Id;
+  name: string;
+  quantity: number;
+  unitPriceCents: Cents;
+  lineTotalCents: Cents;
+}
+
+/** Réponse de POST /orders (X-Cart-Token) : 201 si payée, 402 avec { order } si paiement refusé. */
+export interface PlacedOrder {
+  id: string;
+  status: PlacedOrderStatus;
+  totalCents: Cents;
+  paymentReference: string | null;
+  createdAt: IsoDate;
+  items: PlacedOrderItem[];
+}

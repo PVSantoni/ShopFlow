@@ -1,17 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  LucideBatteryCharging,
-  LucideBot,
   LucideChevronDown,
-  LucideCog,
-  LucideCpu,
   LucideDynamicIcon,
   LucideMenu,
-  LucideRadar,
   LucideShoppingCart,
-  LucideWrench,
 } from '@lucide/angular';
+import { CATALOG_CATEGORIES } from '../../core/data/categories';
 import { CartService } from '../../core/services/cart.service';
 import { Button } from '../../ui/button/button';
 import { Dropdown } from '../../ui/dropdown/dropdown';
@@ -34,20 +29,21 @@ import { SearchBar } from '../search-bar/search-bar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Navbar {
-  protected readonly cartCount = inject(CartService).count;
+  private readonly cartService = inject(CartService);
 
-  protected readonly catalog = [
-    { label: 'Microcontrôleurs', icon: LucideCpu, hint: 'Arduino, ESP32, Pico' },
-    { label: 'Capteurs', icon: LucideRadar, hint: 'Distance, température, mouvement' },
-    { label: 'Kits robotiques', icon: LucideBot, hint: 'Châssis, moteurs, guides' },
-    { label: 'Moteurs et servos', icon: LucideCog, hint: 'DC, pas à pas, servos' },
-    { label: 'Alimentation', icon: LucideBatteryCharging, hint: 'Piles, régulateurs, blocs' },
-    { label: 'Outillage', icon: LucideWrench, hint: 'Soudure, mesure, câbles' },
-  ];
+  protected readonly cartCount = this.cartService.count;
+  protected readonly cartItems = computed(() => this.cartService.cart()?.items ?? []);
+  protected readonly cartTotal = computed(() => this.cartService.cart()?.totalCents ?? 0);
 
-  protected readonly quickLinks = [
+  protected euro(cents: number): string {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100);
+  }
+
+  protected readonly catalog = CATALOG_CATEGORIES;
+
+  protected readonly quickLinks: { label: string; path: string; params?: Record<string, string> }[] = [
     { label: 'Offres du jour', path: '/catalogue' },
-    { label: 'Nouveautés', path: '/catalogue' },
+    { label: 'Nouveautés', path: '/catalogue', params: { tri: 'newest' } },
     { label: 'Meilleures ventes', path: '/catalogue' },
     { label: 'Kits débutants', path: '/catalogue' },
     { label: 'Aide', path: '/faq' },

@@ -1,0 +1,140 @@
+<div class="page">
+  <h1>Mon panier</h1>
+
+  @if (error()) {
+    <p class="alert" role="alert">
+      <svg lucideTriangleAlert [size]="18"></svg>
+      {{ error() }}
+    </p>
+  }
+
+  @if (items().length === 0) {
+    <section class="empty">
+      <svg lucideShoppingCart [size]="56" [strokeWidth]="1.25"></svg>
+      <h2>Votre panier est vide</h2>
+      <p>Ajoutez des produits depuis le catalogue pour les retrouver ici.</p>
+      <a appButton variant="accent" routerLink="/catalogue">Voir le catalogue</a>
+    </section>
+  } @else {
+    <div class="layout">
+      <section class="lines" aria-label="Articles du panier">
+        <ul>
+          @for (item of items(); track item.productId) {
+            @let isBusy = busy().has(item.productId);
+            <li class="line" [class.line--busy]="isBusy">
+              <a class="line__visual" [routerLink]="['/produit', item.product.slug]" aria-hidden="true" tabindex="-1">
+                @if (item.product.imageUrls[0]) {
+                  <img [src]="item.product.imageUrls[0]" alt="" />
+                } @else {
+                  <svg lucidePackage [size]="40" [strokeWidth]="1.25"></svg>
+                }
+              </a>
+
+              <div class="line__main">
+                <a class="line__name" [routerLink]="['/produit', item.product.slug]">{{ item.product.name }}</a>
+
+                @if (item.quantity > item.product.stock) {
+                  <p class="line__warn">Stock insuffisant : {{ item.product.stock }} disponible{{ item.product.stock > 1 ? 's' : '' }}.</p>
+                } @else if (item.product.stock <= 10) {
+                  <p class="line__warn">Plus que {{ item.product.stock }} en stock</p>
+                } @else {
+                  <p class="line__ok">En stock</p>
+                }
+
+                <div class="line__actions">
+                  <div class="qty" role="group" [attr.aria-label]="'Quantité de ' + item.product.name">
+                    <button type="button" aria-label="Diminuer" [disabled]="isBusy" (click)="changeQuantity(item, item.quantity - 1)">
+                      <svg lucideMinus [size]="14"></svg>
+                    </button>
+                    <span>{{ item.quantity }}</span>
+                    <button type="button" aria-label="Augmenter" [disabled]="isBusy || item.quantity >= item.product.stock" (click)="changeQuantity(item, item.quantity + 1)">
+                      <svg lucidePlus [size]="14"></svg>
+                    </button>
+                  </div>
+
+                  <button class="link" type="button" [disabled]="isBusy" (click)="saveForLater(item)">
+                    <svg lucideBookmarkPlus [size]="16"></svg>
+                    Mettre de côté
+                  </button>
+                  <button class="link link--danger" type="button" [disabled]="isBusy" (click)="remove(item)">
+                    <svg lucideTrash [size]="16"></svg>
+                    Supprimer
+                  </button>
+                </div>
+              </div>
+
+              <div class="line__price">
+                <app-price [value]="item.lineTotalCents / 100" />
+                @if (item.quantity > 1) {
+                  <small>{{ item.unitPriceCents | euro }} l'unité</small>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <aside class="summary" aria-label="Récapitulatif">
+        <h2>Récapitulatif</h2>
+        <dl>
+          <div>
+            <dt>Sous-total ({{ count() }} article{{ count() > 1 ? 's' : '' }})</dt>
+            <dd>{{ cart()?.subtotalCents | euro }}</dd>
+          </div>
+          @if ((cart()?.discountCents ?? 0) > 0) {
+            <div class="summary__discount">
+              <dt>Remise</dt>
+              <dd>- {{ cart()?.discountCents | euro }}</dd>
+            </div>
+          }
+          <div>
+            <dt>Livraison</dt>
+            <dd class="muted">Calculée à la commande</dd>
+          </div>
+        </dl>
+
+        <p class="summary__total">
+          <span>Total</span>
+          <app-price [value]="(cart()?.totalCents ?? 0) / 100" />
+        </p>
+
+        <button appButton variant="accent" size="lg" [block]="true" type="button" [disabled]="ordering() || busy().size > 0" (click)="placeOrder()">
+          {{ ordering() ? 'Paiement en cours…' : 'Passer la commande' }}
+          <svg lucideArrowRight [size]="18"></svg>
+        </button>
+        <p class="summary__note">
+          <svg lucideLock [size]="14"></svg>
+          Paiement 100 % sécurisé
+        </p>
+        <a class="summary__continue" routerLink="/catalogue">Continuer mes achats</a>
+      </aside>
+    </div>
+  }
+
+  @if (saved.items().length) {
+    <section class="saved" aria-label="Articles mis de côté">
+      <h2>
+        <svg lucideBookmark [size]="20"></svg>
+        Mis de côté ({{ saved.items().length }})
+      </h2>
+      <ul>
+        @for (s of saved.items(); track s.productId) {
+          @let isBusy = busy().has(s.productId);
+          <li class="saved__item">
+            <div>
+              <a class="line__name" [routerLink]="['/produit', s.slug]">{{ s.name }}</a>
+              <p class="muted">Quantité {{ s.quantity }} · {{ s.unitPriceCents | euro }} l'unité</p>
+            </div>
+            <div class="saved__actions">
+              <button appButton variant="ghost" size="sm" type="button" [disabled]="isBusy" (click)="moveToCart(s)">Remettre dans le panier</button>
+              <button class="link link--danger" type="button" [disabled]="isBusy" (click)="saved.remove(s.productId)">
+                <svg lucideTrash [size]="16"></svg>
+                Supprimer
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>

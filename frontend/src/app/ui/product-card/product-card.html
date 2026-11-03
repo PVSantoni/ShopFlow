@@ -1,17 +1,27 @@
 <article class="card">
-  <div class="card__image" [style.--hue]="product().hue">
+  <a class="card__image" [style.--hue]="product().hue" [routerLink]="['/produit', product().slug]" [attr.aria-label]="product().title">
     <svg class="card__icon" [lucideIcon]="product().icon" [size]="72" [strokeWidth]="1.25" aria-hidden="true"></svg>
     @if (discount() > 0) {
       <app-badge class="card__badge">-{{ discount() }}%</app-badge>
     }
-  </div>
+  </a>
   <div class="card__body">
-    <h3 class="card__title">{{ product().title }}</h3>
-    <app-rating [value]="product().rating" [count]="product().reviews" />
+    <h3 class="card__title"><a [routerLink]="['/produit', product().slug]">{{ product().title }}</a></h3>
+    <app-rating [value]="product().rating" [count]="product().reviews || null" />
     <app-price [value]="product().price" [original]="product().originalPrice" />
+    <p class="card__stock" [class.card__stock--out]="product().outOfStock">
+      {{ product().outOfStock ? 'Rupture de stock' : product().stock + ' en stock' }}
+    </p>
     @if (product().badge) {
       <app-badge tone="dark">{{ product().badge }}</app-badge>
     }
-    <button appButton variant="accent" size="sm" [block]="true" class="card__cta" type="button" [disabled]="product().outOfStock" (click)="add()">Ajouter au panier</button>
+    <button appButton variant="accent" size="sm" [block]="true" class="card__cta" type="button" [disabled]="product().outOfStock" (click)="add()">
+      @if (added()) {
+        <svg lucideCheck [size]="16" [strokeWidth]="2.5"></svg>
+        Ajouté
+      } @else {
+        Ajouter au panier
+      }
+    </button>
   </div>
 </article>

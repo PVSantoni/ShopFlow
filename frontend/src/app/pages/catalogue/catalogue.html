@@ -1,0 +1,112 @@
+<div class="catalogue">
+  <header class="catalogue__head">
+    <div>
+      <h1>{{ title() }}</h1>
+      @if (state().kind === 'ready') {
+        <p class="catalogue__count">{{ total() }} produit{{ total() > 1 ? 's' : '' }}</p>
+      }
+    </div>
+
+    <div class="catalogue__tools">
+      <button class="catalogue__filters-btn" appButton variant="ghost" size="sm" type="button" (click)="filtersOpen.set(!filtersOpen())">
+        <svg lucideSlidersHorizontal [size]="16"></svg>
+        Filtres
+      </button>
+      <label class="sort">
+        <span>Trier par</span>
+        <select [value]="sort()" (change)="setParams({ tri: $any($event.target).value === 'relevance' ? null : $any($event.target).value })">
+          @for (s of sorts; track s.value) {
+            <option [value]="s.value" [selected]="s.value === sort()">{{ s.label }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <div class="catalogue__body">
+    <aside class="filters" [class.filters--open]="filtersOpen()" aria-label="Filtres">
+      <section>
+        <h2>Catégories</h2>
+        <ul>
+          <li>
+            <a routerLink="/catalogue" [queryParams]="{ q: q() || null }" [class.is-active]="!categorie()">Toutes</a>
+          </li>
+          @for (c of categories; track c.slug) {
+            <li>
+              <a routerLink="/catalogue" [queryParams]="{ categorie: c.slug, q: q() || null }" [class.is-active]="categorie() === c.slug">{{ c.name }}</a>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section>
+        <h2>Prix</h2>
+        <div class="price-range">
+          <app-input label="Min (€)" type="number" [(value)]="minInput" />
+          <app-input label="Max (€)" type="number" [(value)]="maxInput" />
+        </div>
+        <button appButton variant="ghost" size="sm" [block]="true" type="button" (click)="applyPrice()">Appliquer</button>
+      </section>
+
+      <section>
+        <h2>Disponibilité</h2>
+        <label class="check">
+          <input type="checkbox" [checked]="stock() === '1'" (change)="toggleStock($any($event.target).checked)" />
+          En stock uniquement
+        </label>
+      </section>
+
+      @if (hasFilters()) {
+        <a class="filters__reset" routerLink="/catalogue">Réinitialiser les filtres</a>
+      }
+    </aside>
+
+    <section class="results" aria-live="polite">
+      @switch (state().kind) {
+        @case ('loading') {
+          <p class="results__msg" role="status">Chargement…</p>
+        }
+        @case ('error') {
+          <p class="results__msg" role="alert">Impossible de charger les produits. Réessayez dans un instant.</p>
+        }
+        @default {
+          @if (items().length === 0) {
+            <div class="empty">
+              <svg lucideSearchX [size]="48" [strokeWidth]="1.25"></svg>
+              <h2>Aucun produit trouvé</h2>
+              <p>Essayez d'autres mots-clés ou retirez des filtres.</p>
+              <a appButton variant="accent" routerLink="/catalogue">Voir tout le catalogue</a>
+            </div>
+          } @else {
+            <div class="grid">
+              @for (p of items(); track p.id) {
+                <app-product-card [product]="p" />
+              }
+            </div>
+
+            @if (pageCount() > 1) {
+              <nav class="pager" aria-label="Pagination">
+                <button appButton variant="ghost" size="sm" type="button" aria-label="Page précédente" [disabled]="currentPage() <= 1" (click)="goTo(currentPage() - 1)">
+                  <svg lucideChevronLeft [size]="16"></svg>
+                </button>
+                @for (n of pages(); track n) {
+                  <button
+                    appButton
+                    [variant]="n === currentPage() ? 'primary' : 'ghost'"
+                    size="sm"
+                    type="button"
+                    [attr.aria-current]="n === currentPage() ? 'page' : null"
+                    (click)="goTo(n)"
+                  >{{ n }}</button>
+                }
+                <button appButton variant="ghost" size="sm" type="button" aria-label="Page suivante" [disabled]="currentPage() >= pageCount()" (click)="goTo(currentPage() + 1)">
+                  <svg lucideChevronRight [size]="16"></svg>
+                </button>
+              </nav>
+            }
+          }
+        }
+      }
+    </section>
+  </div>
+</div>
