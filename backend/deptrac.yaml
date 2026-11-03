@@ -1,0 +1,49 @@
+deptrac:
+  paths:
+    - ./src
+
+  layers:
+    - name: Catalogue
+      collectors:
+        - type: directory
+          value: src/Catalogue/.*
+    - name: Panier
+      collectors:
+        - type: directory
+          value: src/Panier/.*
+    - name: Commande
+      collectors:
+        - type: directory
+          value: src/Commande/.*
+    - name: Paiement
+      collectors:
+        - type: directory
+          value: src/Paiement/.*
+    - name: Livraison
+      collectors:
+        - type: directory
+          value: src/Livraison/.*
+    - name: Notification
+      collectors:
+        - type: directory
+          value: src/Notification/.*
+
+  # Dépendances autorisées entre bounded contexts (cf. docs/ADR-002.md).
+  # Tout ce qui n'est pas listé ici est interdit.
+  ruleset:
+    Catalogue: ~
+    Panier:
+      - Catalogue
+    Commande:
+      - Panier
+      - Paiement
+    # Paiement ne dépend pas de Commande : le sens Paiement -> Commande
+    # passe par des événements ou une interface, pas par un `use` direct.
+    # Cela évite la dépendance circulaire signalée dans l'ADR-002.
+    Paiement: ~
+    Livraison:
+      - Commande
+    Notification:
+      - Commande
+      - Paiement
+      - Livraison
