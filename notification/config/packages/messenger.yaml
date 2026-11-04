@@ -1,0 +1,10 @@
+framework:
+    messenger:
+        transports:
+            # Même exchange que ShopFlow (« messages »), file propre : chaque application reçoit sa copie.
+            commandes:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: App\Messenger\JsonEventSerializer
+                options:
+                    queues:
+                        notifications: ~

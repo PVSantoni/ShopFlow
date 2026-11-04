@@ -80,5 +80,25 @@ services:
       retries: 20
 
 
+  # Projet Symfony séparé : consomme sa propre file (notifications) et envoie les emails.
+  notification:
+    build: ./docker/php
+    working_dir: /var/www/notification
+    volumes:
+      - ./notification:/var/www/notification
+    command: sh -c "composer install --no-interaction && php bin/console messenger:consume commandes --time-limit=3600 --memory-limit=128M --sleep=1 -vv"
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  # Boîte mail de dev : aucun email ne sort, interface sur http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.21
+    ports:
+      - "8025:8025"
+
 volumes:
   db_data:

@@ -1,7 +1,9 @@
 framework:
     messenger:
         transports:
-            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: App\Commande\Infrastructure\Messenger\JsonEventSerializer
         routing:
             'App\Commande\Domain\Event\CommandePassee': async
 

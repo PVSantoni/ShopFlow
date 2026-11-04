@@ -2,6 +2,19 @@
 
 Le transport Messenger `async` utilise RabbitMQ (voir ADR-004). Quand une commande est passée, l'événement `CommandePassee` est publié dans la file `messages`, puis le conteneur `worker` le traite (décrémentation du stock).
 
+## Les deux consommateurs
+
+L'exchange `messages` envoie une copie de chaque événement à deux files :
+
+| File | Consommée par | Rôle |
+|---|---|---|
+| `messages` | conteneur `worker` (backend) | décrémente le stock |
+| `notifications` | conteneur `notification` (projet `notification/`) | envoie l'email de confirmation |
+
+Les événements sont publiés en **JSON** (`JsonEventSerializer`, type `commande.passee`) : le projet `notification` ne dépend d'aucune classe du backend.
+
+Les emails partent vers **Mailpit** (aucun email réel) : http://localhost:8025. Le destinataire est fixe (`NOTIFICATION_TO` dans `notification/.env`) car l'événement ne contient pas d'email client.
+
 ## Démarrer
 
 ```
@@ -55,11 +68,12 @@ http://localhost:15672 (identifiants `guest` / `guest`), onglet **Queues**.
 | `consumers` | Toujours `0` : normal, le worker interroge la file (`basic.get`) au lieu de s'y abonner |
 | `get_empty` | Nombre de fois où le worker a trouvé la file vide. Monte tout seul, environ une fois par seconde. |
 
-Après une commande, `publish` et `ack` augmentent de 1 chacun et `messages_ready` retombe à `0`.
+Après une commande, `publish` et `ack` augmentent de 1 chacun et `messages_ready` retombe à `0`. Il y a deux files (`messages` et `notifications`), qui reçoivent chacune une copie du message.
 
 ## Vérifier le résultat
 
 - Logs du worker : `docker compose logs worker -f` doit afficher `CommandePassee was handled successfully`.
+- Un email « Confirmation de votre commande » apparaît dans Mailpit (http://localhost:8025).
 - Le stock du produit commandé a baissé de la quantité commandée (`GET /products` ou phpMyAdmin sur http://localhost:8081).
 
 ## Voir un message en attente
