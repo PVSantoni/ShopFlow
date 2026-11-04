@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: FlowShop API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /products:
+    get:
+      summary: Rechercher des produits
+      parameters:
+        - { name: q, in: query, schema: { type: string } }
+        - { name: category, in: query, description: Slug de catégorie, schema: { type: string } }
+        - { name: minPriceCents, in: query, schema: { type: integer } }
+        - { name: maxPriceCents, in: query, schema: { type: integer } }
+        - { name: inStockOnly, in: query, schema: { type: boolean } }
+        - name: sort
+          in: query
+          schema: { type: string, default: relevance, enum: [relevance, price_asc, price_desc, newest, rating] }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+        - { name: pageSize, in: query, schema: { type: integer, default: 12, maximum: 50 } }
+      responses:
+        '200':
+          description: Page de produits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/Product' } }
+                  page: { type: integer }
+                  pageSize: { type: integer }
+                  total: { type: integer }
+
+  /products/{slug}:
+    get:
+      summary: Détail d'un produit
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: Produit
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /orders:
+    post:
+      summary: Passer commande
+      parameters:
+        - { name: X-Cart-Token, in: header, required: true, schema: { type: string } }
+      responses:
+        '201':
+          description: Commande créée
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '422': { $ref: '#/components/responses/Error' }
+
+components:
+  responses:
+    Error:
+      description: Erreur (404 produit introuvable, 422 commande invalide)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status: { type: integer }
+              message: { type: string }
+              fields: { type: object, additionalProperties: { type: string } }
+
+  schemas:
+    Product:
+      type: object
+      properties:
+        id: { type: integer }
+        sku: { type: string }
+        slug: { type: string }
+        name: { type: string }
+        description: { type: string }
+        priceCents: { type: integer }
+        compareAtPriceCents: { type: integer }
+        category:
+          type: object
+          properties:
+            id: { type: integer }
+            name: { type: string }
+            slug: { type: string }
+        imageUrls: { type: array, items: { type: string } }
+        specs: { type: object, additionalProperties: true }
+        stock: { type: integer }
+        averageRating: { type: number }
+        reviewCount: { type: integer }
+        active: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    Order:
+      type: object
+      properties:
+        id: { type: string }
+        totalCents: { type: integer }
+        createdAt: { type: string, format: date-time }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId: { type: integer }
+              name: { type: string }
+              quantity: { type: integer }
+              unitPriceCents: { type: integer }
+              lineTotalCents: { type: integer }
