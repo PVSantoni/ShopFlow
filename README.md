@@ -40,6 +40,8 @@ Le premier démarrage d'Angular prend une minute. Suis-le avec `docker compose l
 | Base de données dans le navigateur (phpMyAdmin) | http://localhost:8081 |
 | MySQL depuis ta machine | `127.0.0.1`, port `3306` |
 
+> **Ne lance jamais `npm`, `ng` ou `composer` directement sur ta machine.** Passe toujours par Docker (`docker compose run --rm frontend npm install`, `docker compose exec php composer require ...`). Les dossiers `frontend/node_modules` et `backend/vendor` sont partagés avec les conteneurs : un `npm install` lancé sur ton Mac ou ton PC y installe des fichiers pour ton système, et le conteneur Linux ne démarre plus. VS Code peut te proposer d'installer les dépendances : refuse.
+
 ## Les services
 
 | Service | Image | Rôle | Port |
@@ -170,6 +172,7 @@ docker compose down                       # arrête tout, garde les données
 | `Cannot connect to the Docker daemon` | Docker Desktop n'est pas lancé. |
 | La page `localhost:4200` ne répond pas | Angular compile encore, ou `npm install` n'a pas été fait. Regarde `docker compose logs frontend`. |
 | `Class ... not found` ou erreur d'autoload côté PHP | `docker compose run --rm php composer install` n'a pas été lancé après un pull. |
+| Le conteneur `frontend` s'arrête avec `Cannot find native binding` ou `Cannot find module ... linux-arm64-musl.node` | `node_modules` a été installé hors de Docker. Répare avec `rm -rf frontend/node_modules`, puis `docker compose run --rm frontend npm install`, puis `docker compose up -d frontend`. |
 | Les appels du site vers l'API échouent | Vérifie que `nginx` tourne sur le port 8080. L'URL est fixée dans `frontend/src/app/core/api.ts`. |
 | `SQLSTATE[HY000] [2002]` | MySQL n'est pas encore prêt. Attends que `docker compose ps` affiche `healthy` pour `db`. |
 | Port 3306, 8080, 8081 ou 4200 déjà utilisé | Un autre programme occupe le port (souvent un MySQL local sur 3306). Arrête-le ou change le mapping dans `docker-compose.yml`. |
